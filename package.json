@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/websocket": "^9.0.0",
+    "@prisma/client": "^5.9.1",
     "fastify": "^4.26.0",
     "pg": "^8.11.3"
   },

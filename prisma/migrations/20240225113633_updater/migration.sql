@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Profile" ALTER COLUMN "lastActive" SET DEFAULT CURRENT_TIMESTAMP;

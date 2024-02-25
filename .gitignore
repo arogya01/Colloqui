@@ -1,3 +1,34 @@
-node_modules
-# Keep environment variables out of version control
+# Dependencies
+node_modules/
+
+# Environment Variables
 .env
+.env.*
+
+# Prisma
+# Uncomment the next line if you don't want to include migrations
+# prisma/migrations/
+
+# Build
+dist/
+/build
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Editor & IDE Files
+.idea/
+*.sublime-workspace
+.vscode/
+
+# Testing & Coverage
+/coverage/
+
+# Temporary Files
+*.tmp
+*.temp
