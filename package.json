@@ -12,10 +12,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/jwt": "^8.0.0",
     "@fastify/websocket": "^9.0.0",
     "@prisma/client": "^5.9.1",
     "fastify": "^4.26.0",
-    "pg": "^8.11.3"
+    "fastify-zod": "^1.4.0",
+    "pg": "^8.11.3",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",
