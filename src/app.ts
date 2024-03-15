@@ -1,17 +1,27 @@
-import fastify from "fastify"; 
+import buildServer from "./server";
 
-const server = fastify(); 
 
-server.get("/ping",(req,res)=>{
-    return "pong/n"; 
-}); 
+const server = buildServer();
 
-server.listen({port:3001},(err,address)=>{
-    if(err){
-        console.error(err); 
-        process.exit(1); 
+
+async function main(){
+
+    try {
+        await server.listen({port:3001},(err,address)=>{
+            if(err){
+                console.log('error exectued');
+                console.error(err); 
+                process.exit(1); 
+            }
+        
+            console.log(`Server listening at ${address}`);
+        }); 
+
     }
+    catch(err){
+        console.error(err); 
+        process.exit(1);
+    }
+}
 
-    console.log(`Server listening at ${address}`);
-}); 
-
+main();
