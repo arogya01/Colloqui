@@ -5,9 +5,10 @@ import { CreateUserInput } from "./user.schema";
 export const  createUser = async (requestBody : CreateUserInput) => {
     const {password , ...input} = requestBody; 
 
-    const {hash , salt} = hashPassword(password);
-   console.log('creating new user', input, hash, salt);
-
+    console.log('creating new user', input);
+    const {hash , salt} = await hashPassword(password);
+    console.log('hash', hash);
+    console.log('salt',salt);
     const user = await prisma.user.create({
         data: {
             Profile:{
@@ -15,7 +16,6 @@ export const  createUser = async (requestBody : CreateUserInput) => {
                     email: input.email, 
                     salt,
                     password: hash,
-                    name: input.name,
                     userName: input.userName,
                     bio: input.bio,
                     image: input.image, 
