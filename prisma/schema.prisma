@@ -18,16 +18,18 @@ model User {
 }
 
 model Profile {
-  id          Int      @id @default(autoincrement())
+  profile_id  Int      @id @default(autoincrement())
   user        User     @relation(fields: [userId], references: [id])
   userId      Int      @unique
-  bio         String
-  image       String
+  bio         String?
+  image       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   phoneNumber String   @unique
   email       String   @unique
   password    String
+  userName    String   @unique
+  salt        String
   lastActive  DateTime @default(now())
 }
 

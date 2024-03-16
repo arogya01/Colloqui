@@ -15,7 +15,7 @@ const createUserSchema = z.object({
         required_error: "Password is required",
         invalid_type_error: "Password must be a string",
     }).min(8), // Password validation,
-    name: z.string({
+    userName: z.string({
         required_error: "Name is required",
         invalid_type_error: "Name must be a string",
     }),

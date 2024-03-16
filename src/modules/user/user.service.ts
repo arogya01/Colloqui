@@ -16,6 +16,7 @@ export const  createUser = async (requestBody : CreateUserInput) => {
                     salt,
                     password: hash,
                     name: input.name,
+                    userName: input.userName,
                     bio: input.bio,
                     image: input.image, 
                     phoneNumber : input.phoneNumber
