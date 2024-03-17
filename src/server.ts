@@ -4,7 +4,7 @@ import {withRefResolver} from "fastify-zod";
 import fjwt, {JWT} from "@fastify/jwt"; 
 import userRoutes from "./modules/user/user.routes";
 import {userSchemas} from "./modules/user/user.schema";
-
+import fastifyWebsocket from "@fastify/websocket";
 
 declare module "fastify" {
     interface FastifyRequest {
@@ -33,6 +33,8 @@ function buildServer(){
     server.register(fjwt,{
         secret: process.env.JWT_SECRET as string,
     }); 
+
+    server.register(fastifyWebsocket); 
 
     server.decorate("authenticate", async function(request: FastifyRequest, reply : FastifyReply){
         try{
