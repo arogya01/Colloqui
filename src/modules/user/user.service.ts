@@ -26,4 +26,21 @@ export const  createUser = async (requestBody : CreateUserInput) => {
             }
           // ...other fields...
         }}); 
+
+        return user; 
+}
+
+export const checkExistingUser = async (email : string) => {
+
+    console.log('check for existing user'); 
+
+    const existingUser = await prisma.user.findUnique({
+      where : {
+        email : email
+      }
+    });
+
+
+    return existingUser; 
+
 }
