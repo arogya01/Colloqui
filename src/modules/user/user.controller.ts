@@ -1,10 +1,17 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { CreateUserInput } from "./user.schema";
+import { CreateUserInput, LoginUserInput } from "./user.schema";
 import { checkExistingUser, createUser } from "./user.service";
 
 
-export const loginHandler =() => {
+export const loginHandler =(request: FastifyRequest<{
+    Body: LoginUserInput
+}>,
+reply : FastifyReply
+) => {
     console.log('loginHandler');
+
+    const body = request.body; 
+    
 }
 export async function signupHandler (request: FastifyRequest<{
     Body : CreateUserInput

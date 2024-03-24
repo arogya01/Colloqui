@@ -30,6 +30,10 @@ export const  createUser = async (requestBody : CreateUserInput) => {
         return user; 
 }
 
+export const verifyPassword = async () => {
+   
+}
+
 export const checkExistingUser = async (email : string) => {
 
     console.log('check for existing user'); 
