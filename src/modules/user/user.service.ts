@@ -38,13 +38,13 @@ export const checkExistingUser = async (email : string) => {
 
     console.log('check for existing user'); 
 
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.profile.findUnique({
       where : {
-        email : email
+        email,
       }
     });
 
-
+console.log('exitin user', existingUser);
     return existingUser; 
 
 }
