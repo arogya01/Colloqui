@@ -35,6 +35,7 @@ export const loginHandler = async (
 
   return reply.code(401).send({ message: "invalid password" });
 };
+
 export async function signupHandler(
   request: FastifyRequest<{
     Body: CreateUserInput;
