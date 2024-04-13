@@ -2,13 +2,29 @@ import { FastifyInstance } from "fastify";
 import { extractLastConversation } from "./chat.service";
 
 export async function chatRoutes(server: FastifyInstance) {
+  // console.log("server", server.websocketServer);
   server.get("/chat", { websocket: true }, async (connection, req) => {
-    const { conversationId } = req.query;
+    const { id } = req.query;
+    console.log("hitting the web-scoket", id);
 
     // Find or create a conversation between the current user and the other user
 
-    connection.socket.on("message", (message) => {
+    connection.socket.on("message", async (message) => {
+      console.log("message received", message);
+
+      try {
+        const data = JSON.parse(message);
+        console.log("message received", data);
+        // You can now work with `data` as a JavaScript object
+      } catch (err) {
+        console.log("Error parsing JSON", err);
+      }
+
       connection.socket.send("hi from server");
+    });
+
+    connection.socket.on("close", () => {
+      console.log("connection closed");
     });
   });
 
