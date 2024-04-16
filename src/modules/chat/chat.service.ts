@@ -12,6 +12,17 @@ export const extractLastConversation = async (conversationId: string) => {
   return messages;
 };
 
+export const createMessage = async (conversationId:string) => {
+  const message = await prisma.message.create({
+    data: {
+      conversationId,
+      content: "Hello World",
+    },
+  });
+
+  return message;
+}
+
 export const createConversation = async (
   userId: string,
   otherUserId: string
