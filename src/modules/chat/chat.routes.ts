@@ -8,6 +8,7 @@ export async function chatRoutes(server: FastifyInstance) {
     console.log("hitting the web-scoket", id);
 
     // Find or create a conversation between the current user and the other user
+    // need to add the message logic over here, adding transactions in prisma for that... 
 
     connection.socket.on("message", async (message) => {
       console.log("message received", message);
