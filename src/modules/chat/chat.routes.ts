@@ -48,4 +48,8 @@ export async function chatRoutes(server: FastifyInstance) {
       console.log("error occured in fetching messages", err);
     }
   });
+
+  server.post('/conversations/create', async (req, reply) => {
+
+  });
 }
