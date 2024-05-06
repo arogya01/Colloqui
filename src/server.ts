@@ -47,9 +47,6 @@ function buildServer() {
   );
 
   server.addHook("preHandler", (req, res, next) => {
-    console.log("req", req);
-    console.log("req.jwt", req.jwt);
-    console.log("server.jwt", server.jwt);
     req.jwt = server.jwt;
     return next();
   });
