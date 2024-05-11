@@ -1,17 +1,22 @@
 import { Conversation } from "@prisma/client";
 import prisma from "../../utils/prisma";
 
-export const extractLastConversation = async (conversationId: string) => {
-  console.log("extractLastConversation");
 
-  const messages = await prisma.message.findMany({
-    where: {
-      conversationId: conversationId,
-    },
-  });
+export const fetchAllConversations = async (userId: number) => {
+  try {
+    const convos = await prisma.participant.findMany({
+      where: {
+        userId: Number(userId)
+      }
+    });
 
-  return messages;
-};
+    console.log(convos);
+    return convos;
+  }
+  catch (error) {
+    console.error('error occured in fetching all conversations', error);
+  }
+}
 
 export const createMessage = async (conversationId: string) => {
   const message = await prisma.message.create({

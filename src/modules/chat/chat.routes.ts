@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { createConversation, extractLastConversation } from "./chat.service";
+import { createConversation, fetchAllConversations } from "./chat.service";
 
 export async function chatRoutes(server: FastifyInstance) {
   // console.log("server", server.websocketServer);
@@ -38,16 +38,26 @@ export async function chatRoutes(server: FastifyInstance) {
     });
   });
 
-  server.get("/conversations/:id/messages", async (req, reply) => {
-    const { id } = req.params;
+  server.get("/conversations/:userId", async (req, reply) => {
+    const { userId } = req.params;
+
+    if (!userId) {
+      reply.code(400).send({
+        error: "userId is required"
+
+      })
+    }
 
     try {
-      const messages = extractLastConversation(id);
+      const conversations = fetchAllConversations(userId);
 
-      if (messages === null) {
-        // create the conversation between the users yeah... 
+      reply.send(conversations);
 
-      }
+
+      // if (messages === null) {
+      //   // create the conversation between the users yeah... 
+
+      // }
     } catch (err) {
       console.log("error occured in fetching messages", err);
     }
