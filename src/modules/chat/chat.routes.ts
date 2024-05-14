@@ -16,7 +16,7 @@ export async function chatRoutes(server: FastifyInstance) {
         const data = JSON.parse(message);
         console.log('data is', data);
 
-        if (data?.type === "CREATE") {
+        if (data?.type === "CREATE_CONVERSATION") {
           console.log('data', data);
           const resp = await createConversation(data.participants, "");
           console.log("resp", resp);
@@ -50,14 +50,7 @@ export async function chatRoutes(server: FastifyInstance) {
 
     try {
       const conversations = fetchAllConversations(userId);
-
       reply.send(conversations);
-
-
-      // if (messages === null) {
-      //   // create the conversation between the users yeah... 
-
-      // }
     } catch (err) {
       console.log("error occured in fetching messages", err);
     }
