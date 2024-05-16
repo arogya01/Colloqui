@@ -33,6 +33,7 @@ export const createMessage = async (conversationId: string) => {
 // should I just get in participants array?? 
 export const createConversation = async (
   participants: number[],
+  message:{content:string, senderId:number}
   groupName?: string
 ) => {
   // if between the two user, then no need to create the conversation name, 
@@ -47,6 +48,11 @@ export const createConversation = async (
             data: participants.map((participant) => ({
               userId: participant
             }))
+          }
+        }, 
+        messages: {
+          create:{
+            content:
           }
         }
 
