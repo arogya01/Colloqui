@@ -1,4 +1,4 @@
-import { Conversation } from "@prisma/client";
+import { Conversation, MediaType } from "@prisma/client";
 import prisma from "../../utils/prisma";
 
 
@@ -18,11 +18,17 @@ export const fetchAllConversations = async (userId: number) => {
   }
 }
 
-export const createMessage = async (conversationId: string) => {
+export const createMessage = async ({conversationId , value, valueType, senderId}: {conversationId:number, content:string, value:string, valueType:MediaType, senderId:number}) => {
   const message = await prisma.message.create({
     data: {
       conversationId,
-      content: "Hello World",
+      senderId,
+      media:{
+        create:{
+          value,
+          type: valueType,           
+        }
+      }
     },
   });
 
