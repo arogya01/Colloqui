@@ -1,11 +1,11 @@
 import "dotenv/config";
 import Fastify, { FastifyRequest, FastifyReply } from "fastify";
-import { withRefResolver } from "fastify-zod";
 import fjwt, { JWT } from "@fastify/jwt";
 import userRoutes from "./modules/user/user.routes";
 import { userSchemas } from "./modules/user/user.schema";
 import fastifyWebsocket from "@fastify/websocket";
 import { chatRoutes } from "./modules/chat/chat.routes";
+import { chatSchemas } from "./modules/chat/chat.schema";
 
 declare module "fastify" {
   interface FastifyRequest {
