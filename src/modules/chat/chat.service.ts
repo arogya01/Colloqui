@@ -3,9 +3,13 @@ import prisma from "../../utils/prisma";
 
 export const fetchAllConversations = async (userId: number) => {
   try {
-    const convos = await prisma.participant.findMany({
+    const convos = await prisma.conversation.findMany({
       where: {
-        userId: Number(userId),
+        participant: {
+          some: {
+            userId
+          }
+        }
       },
     });
 

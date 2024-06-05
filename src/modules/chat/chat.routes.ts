@@ -17,14 +17,6 @@ export async function chatRoutes(server: FastifyInstance) {
     connection.socket.on("message", async (message) => {
       try {
         const data = JSON.parse(message);
-        // const parsedMessage = createConversationSchema.safeParse(data);
-
-        // if (!parsedMessage.success) {
-        //   connection.socket.send(
-        //     JSON.stringify({ error: "insuffcient details bruh" })
-        //   );
-        //   return;
-        // }
 
         console.log("data is", data);
 
@@ -67,6 +59,18 @@ export async function chatRoutes(server: FastifyInstance) {
             })
           );
         }
+
+        if (data?.type === CHAT_EVENTS.FETCH_CONVERSATIONS) {
+          const conversations = await fetchAllConversations(data.userId);
+
+          connection.socket.send(
+            JSON.stringify({
+              type: CHAT_EVENTS.FETCH_CONVERSATIONS,
+              data: { conversations },
+            })
+          );
+        }
+
       } catch (err) {
         console.log("Error parsing JSON", err);
       }
