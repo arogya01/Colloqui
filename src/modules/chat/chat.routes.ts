@@ -11,8 +11,29 @@ import { CHAT_EVENTS } from "./chat.constants";
 export async function chatRoutes(server: FastifyInstance) {
   // console.log("server", server.websocketServer);
   server.get("/chat", { websocket: true }, async (connection, req) => {
+    const token = req.headers['sec-websocket-protocol'];
     const { id } = req.query;
     console.log("hitting the web-scoket", id);
+
+    if(!token){
+      connection.socket.send(JSON.stringify({
+        type: CHAT_EVENTS.ERROR,
+        data: { error: "Invalid token" }
+      }));
+      connection.socket.close();
+      return;
+    }
+
+    req.jwt.verify(token, (err,decoded) => {
+      if(err){
+        connection.socket.send(JSON.stringify({
+          type: CHAT_EVENTS.ERROR,
+          data: { error: "Invalid token" }
+        }));
+        connection.socket.close();
+        return;
+      }
+    });
 
     connection.socket.on("message", async (message) => {
       try {
