@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyRequest } from "fastify";
 import {
   createConversation,
   createMessage,
@@ -8,9 +8,20 @@ import {
 import { $ref, createConversationSchema } from "./chat.schema";
 import { CHAT_EVENTS } from "./chat.constants";
 
+interface MyCustomRequest extends FastifyRequest {
+  decodedToken: any;
+  query : {
+    id: string;
+  }
+}
+
+interface QueryStringType {
+  userId:number;
+}
+
 export async function chatRoutes(server: FastifyInstance) {
   // console.log("server", server.websocketServer);
-  server.get("/chat", { websocket: true }, async (connection, req) => {
+  server.get("/chat", { websocket: true }, async (connection, req:MyCustomRequest) => {
     const token = req.headers['sec-websocket-protocol'];
     const { id } = req.query;
     console.log("hitting the web-scoket", id);
@@ -35,7 +46,7 @@ export async function chatRoutes(server: FastifyInstance) {
       }
     });
 
-    connection.socket.on("message", async (message) => {
+    connection.socket.on("message", async (message:any) => {
       try {
         const data = JSON.parse(message);
 
@@ -103,7 +114,7 @@ export async function chatRoutes(server: FastifyInstance) {
   });
 
   server.get("/conversations/:userId", async (req, reply) => {
-    const { userId } = req.params;
+    const { userId } = req.params as QueryStringType;
 
     if (!userId) {
       reply.code(400).send({
