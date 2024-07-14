@@ -2,10 +2,11 @@
   "name": "colloqui",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.js",
+  "main": "dist/app.js",
+  "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "node src/app.js",
+    "start": "NODE_OPTIONS='--experimental-specifier-resolution=node' node dist/app.js",
     "dev": "tsnd --respawn --transpile-only --exit-child src/app.ts",
     "test": "tap --node-arg=--require=ts-node/register"
   },
