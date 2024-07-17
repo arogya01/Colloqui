@@ -6,9 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "NODE_OPTIONS='--experimental-specifier-resolution=node' node dist/app.js",
-    "dev": "tsnd --respawn --transpile-only --exit-child src/app.ts",
-    "test": "tap --node-arg=--require=ts-node/register"
+    "start": "node --import=extensionless/register dist/app.js",
+    "dev": "tsnd --respawn --transpile-only --exit-child src/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,12 +18,14 @@
     "@prisma/client": "^5.9.1",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
+    "extensionless": "^1.9.9",
     "fastify": "^4.26.0",
     "fastify-zod": "^1.4.0",
     "pg": "^8.11.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.11.19",
     "@types/ws": "^8.5.10",
     "prisma": "^5.9.1",

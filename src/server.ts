@@ -58,6 +58,13 @@ function buildServer() {
   server.register(userRoutes, { prefix: "api/users" });
   server.register(chatRoutes, { prefix: "api/colloqui" });
 
+  server.get('/health', async (request: FastifyRequest, reply: FastifyReply) => {
+    return {
+      status: 'OK',
+      timestamp: new Date().toISOString()
+    }
+  });
+
   return server;
 }
 

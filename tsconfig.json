@@ -1,12 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "esModuleInterop": true ,
+    "skipLibCheck": true,
+    "module": "ESNext",
     "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
-    "strict": false /* Enable all strict type-checking options. */,   
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    "target": "ESNext",
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "outDir": "dist",
+    "lib": [ "esnext" ],
+    "types": [ "node" ],
+    "baseUrl": "./",
+    "strict": false
   }
 }
