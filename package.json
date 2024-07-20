@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "node --import=extensionless/register dist/app.js",
+    "start": "NODE_OPTIONS='--experimental-specifier-resolution=node' node src/dist/app.js",
     "dev": "tsnd --respawn --transpile-only --exit-child src/app.ts"
   },
   "keywords": [],
