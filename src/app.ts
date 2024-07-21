@@ -5,7 +5,7 @@ const server = buildServer();
 async function main() {
   const port  = process.env.PORT as string; 
   try {
-    await server.listen({ port: Number(port) }, (err, address) => {
+    await server.listen({ port: Number(port) , host: '0.0.0.0' }, (err, address) => {
       if (err) {
         console.log("error exectued");
         console.error(err);
