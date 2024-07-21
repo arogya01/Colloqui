@@ -3,7 +3,7 @@ import buildServer from "./server";
 const server = buildServer();
 
 async function main() {
-  const port  = process.env.APP_PORT as string; 
+  const port  = process.env.PORT as string; 
   try {
     await server.listen({ port: Number(port) }, (err, address) => {
       if (err) {
