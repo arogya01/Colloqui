@@ -44,7 +44,6 @@ export const createMessage = async ({
   senderId,
 }: {
   conversationId: number;
-  content: string;
   value: string;
   valueType: MediaType;
   senderId: number;
@@ -69,7 +68,6 @@ export const createMessage = async ({
 export const createConversation = async (
   participants: number[],
   message: {
-    content: string;
     senderId: number;
     value: string;
     valueType: MediaType;

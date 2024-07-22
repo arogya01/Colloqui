@@ -27,7 +27,9 @@ declare module "@fastify/jwt" {
 }
 
 function buildServer() {
-  const server = Fastify();
+  const server = Fastify({
+    logger:true
+  });
 
   server.register(fjwt, {
     secret: process.env.JWT_SECRET as string,
@@ -54,6 +56,12 @@ function buildServer() {
   for (const schema of [...userSchemas]) {
     server.addSchema(schema);
   }
+
+  server.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
+    return {
+      message: 'Welcome to the chat app'
+    }
+  }); 
 
   server.register(userRoutes, { prefix: "api/users" });
   server.register(chatRoutes, { prefix: "api/colloqui" });
