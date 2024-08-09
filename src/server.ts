@@ -31,6 +31,8 @@ function buildServer() {
     logger:true
   });
 
+  console.log('started build Server');
+
   server.register(fjwt, {
     secret: process.env.JWT_SECRET as string,
   });
