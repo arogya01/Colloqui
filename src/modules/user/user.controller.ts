@@ -26,11 +26,11 @@ export const loginHandler = async (
   });
 
   if (correctPass) {
-    const { password, salt, ...rest } = user;
+    const {userId,  password, salt, ...rest } = user;
 
     // request already has access to jwt??
     // so we can just use it to sign the token,
-    return { accessToken: request.jwt.sign(rest) };
+    return { accessToken: request.jwt.sign(rest) , userId };
   }
 
   return reply.code(401).send({ message: "invalid password" });
