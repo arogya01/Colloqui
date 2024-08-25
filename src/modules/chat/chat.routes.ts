@@ -26,6 +26,16 @@ export async function chatRoutes(server: FastifyInstance) {
     const { id } = req.query;
     console.log("hitting the web-scoket", id);
 
+
+    if(!id){
+      connection.socket.send(JSON.stringify({
+        type: CHAT_EVENTS.ERROR,
+        data: { error: "Invalid conversation id" }
+      })); 
+      connection.socket.close();
+      return;
+    }
+    
     if(!token){
       connection.socket.send(JSON.stringify({
         type: CHAT_EVENTS.ERROR,
