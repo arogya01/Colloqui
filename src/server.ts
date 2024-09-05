@@ -6,6 +6,8 @@ import { userSchemas } from "./modules/user/user.schema";
 import fastifyWebsocket from "@fastify/websocket";
 import { chatRoutes } from "./modules/chat/chat.routes";
 import { chatSchemas } from "./modules/chat/chat.schema";
+import searchRoutes from "./modules/search/search.routes";
+import { searchSchemas } from "./modules/search/search.schema";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -55,9 +57,17 @@ function buildServer() {
     return next();
   });
 
-  for (const schema of [...userSchemas]) {
-    server.addSchema(schema);
+  const allSchemas = [...userSchemas, ...chatSchemas, ...searchSchemas];
+
+  // Add schemas, avoiding duplicates
+  const addedSchemas = new Set();
+  for (const schema of allSchemas) {
+    if (schema.$id && !addedSchemas.has(schema.$id)) {
+      server.addSchema(schema);
+      addedSchemas.add(schema.$id);
+    }
   }
+  
 
   server.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
     return {
@@ -67,6 +77,7 @@ function buildServer() {
 
   server.register(userRoutes, { prefix: "api/users" });
   server.register(chatRoutes, { prefix: "api/colloqui" });
+  server.register(searchRoutes, {prefix:"api/users" });
 
   server.get('/health', async (request: FastifyRequest, reply: FastifyReply) => {
     return {

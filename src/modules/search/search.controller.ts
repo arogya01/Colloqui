@@ -4,11 +4,11 @@ import { SearchQueryInput } from "./search.schema";
 import prisma from "../../utils/prisma";
 
 export async function searchUsers(
-  request: FastifyRequest<{ QueryString: SearchQueryInput }>,
+  request: FastifyRequest<{ Querystring: SearchQueryInput }>,
   reply: FastifyReply
 ) {
   const { username, email, phone } = request.query;
-
+  console.log('userName',username);
   const whereClause: any = {};
 
   if (username) {

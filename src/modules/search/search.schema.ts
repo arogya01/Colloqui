@@ -22,7 +22,10 @@ const searchResponseSchema = z.array(
   })
 );
 
-export const { schemas: searchSchemas, $ref } = buildJsonSchemas({
+export const { schemas: searchSchemas, $ref  } = buildJsonSchemas({
+  
   searchQuerySchema,
   searchResponseSchema,
+},{
+  $id: "searchSchema",
 });
