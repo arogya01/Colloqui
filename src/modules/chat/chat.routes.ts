@@ -10,34 +10,33 @@ import { CHAT_EVENTS } from "./chat.constants";
 
 interface MyCustomRequest extends FastifyRequest {
   decodedToken: any;
-  query: {
+  query : {
     id: string;
   }
 }
 
 interface QueryStringType {
-  userId: number;
+  userId:number;
 }
 
-// Add a Set to store active connections
-const activeConnections = new Set<WebSocket>();
-
 export async function chatRoutes(server: FastifyInstance) {
-  server.get("/chat", { websocket: true }, async (connection, req: MyCustomRequest) => {
+  // console.log("server", server.websocketServer);
+  server.get("/chat", { websocket: true }, async (connection, req:MyCustomRequest) => {
     const token = req.headers['sec-websocket-protocol'];
     const { id } = req.query;
-    console.log("hitting the web-socket", id);
+    console.log("hitting the web-scoket", id);
 
-    if (!id) {
+
+    if(!id){
       connection.socket.send(JSON.stringify({
         type: CHAT_EVENTS.ERROR,
         data: { error: "Invalid conversation id" }
-      }));
+      })); 
       connection.socket.close();
       return;
     }
-
-    if (!token) {
+    
+    if(!token){
       connection.socket.send(JSON.stringify({
         type: CHAT_EVENTS.ERROR,
         data: { error: "Invalid token" }
@@ -46,8 +45,8 @@ export async function chatRoutes(server: FastifyInstance) {
       return;
     }
 
-    req.jwt.verify(token, (err, decoded) => {
-      if (err) {
+    req.jwt.verify(token, (err,decoded) => {
+      if(err){
         connection.socket.send(JSON.stringify({
           type: CHAT_EVENTS.ERROR,
           data: { error: "Invalid token" }
@@ -57,25 +56,23 @@ export async function chatRoutes(server: FastifyInstance) {
       }
     });
 
-    // Add the connection to the Set
-    activeConnections.add(connection.socket);
-
-    // Broadcast the updated user count to all clients
-    broadcastUserCount();
-
-    connection.socket.on("message", async (message: any) => {
+    connection.socket.on("message", async (message:any) => {
       try {
         const data = JSON.parse(message);
-        
+
+        console.log("data is", data);
+
         if (data?.type === CHAT_EVENTS.CREATE_CONVERSATION) {
           console.log("data", data);
           const {data: {participants, message, groupName}} = data; 
+          try{
           const resp = await createConversation(
             participants,
             message,
             groupName
           );
           console.log("resp", resp);
+          // emitting back the conversation id to the client
           connection.socket.send(
             JSON.stringify({
               type: CHAT_EVENTS.CONVERSATION_CREATED,
@@ -83,8 +80,49 @@ export async function chatRoutes(server: FastifyInstance) {
             })
           );
         }
+        catch(err){
+          console.log('hey routed error',err);
+          connection.socket.send(
+            JSON.stringify({
+              type: CHAT_EVENTS.ERROR,
+              data: { error: err?.message }
+            })
+          );
+        }
+          // create the conversation between the users yeah...
+        }
 
-        // ... (rest of the message handling logic)
+        if (data?.type === CHAT_EVENTS.SEND_MESSAGE) {
+          const createdMessage = await createMessage(data.message);
+          connection.socket.send(
+            JSON.stringify({
+              type: CHAT_EVENTS.MESSAGE_SENT,
+              data: { createdMessage },
+            })
+          );
+        }
+
+        if (data?.type === CHAT_EVENTS.FETCH_MESSAGES) {
+          const messages = await fetchAllMessages(data.conversationId);
+
+          connection.socket.send(
+            JSON.stringify({
+              type: CHAT_EVENTS.FETCH_MESSAGES,
+              data: { messages },
+            })
+          );
+        }
+
+        if (data?.type === CHAT_EVENTS.FETCH_CONVERSATIONS) {
+          const conversations = await fetchAllConversations(data.userId);
+
+          connection.socket.send(
+            JSON.stringify({
+              type: CHAT_EVENTS.FETCH_CONVERSATIONS,
+              data: { conversations },
+            })
+          );
+        }
 
       } catch (err) {
         console.log("Error parsing JSON", err);
@@ -93,29 +131,23 @@ export async function chatRoutes(server: FastifyInstance) {
 
     connection.socket.on("close", () => {
       console.log("connection closed");
-      // Remove the connection from the Set
-      activeConnections.delete(connection.socket);
-      // Broadcast the updated user count to all clients
-      broadcastUserCount();
     });
   });
 
-  // Add a new route to get the current number of connected users
-  server.get("/connected-users", (req, reply) => {
-    reply.send({ connectedUsers: activeConnections.size });
-  });
+  server.get("/conversations/:userId", async (req, reply) => {
+    const { userId } = req.params as QueryStringType;
 
-  // ... (rest of the routes)
-}
+    if (!userId) {
+      reply.code(400).send({
+        error: "userId is required",
+      });
+    }
 
-// Function to broadcast the user count to all connected clients
-function broadcastUserCount() {
-  const message = JSON.stringify({
-    type: CHAT_EVENTS.USER_COUNT_UPDATE,
-    data: { connectedUsers: activeConnections.size },
-  });
-
-  activeConnections.forEach((socket) => {
-    socket.send(message);
+    try {
+      const conversations = await fetchAllConversations(userId);
+      reply.send(conversations);
+    } catch (err) {
+      console.log("error occured in fetching messages", err);
+    }
   });
 }
