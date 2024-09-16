@@ -74,7 +74,40 @@ export const createConversation = async (
   },
   groupName?: string
 ) => {
+  console.log('service group name');
+  console.log({ participants, message, groupName });
   // if between the two user, then no need to create the conversation name,
+
+  const existingConversation = await prisma.conversation.findFirst({
+    where: {
+      participant: {
+        every: {
+          userId: { in: participants },
+        },
+      },
+      AND: [
+        {
+          participant: {
+            every: {
+              userId: { in: participants },
+            },
+          },
+        },
+        {
+          participant: {
+            none: {
+              userId: { notIn: participants },
+            },
+          },
+        },
+      ],
+    },
+  });
+
+  if (existingConversation) {
+    throw new Error("Conversation already exists between these two participants");
+  }
+
 
   try {
     const result = await prisma.conversation.create({
