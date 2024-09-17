@@ -45,6 +45,19 @@ const createUserRespSchema = z.object({
   ...userCore,
 });
 
+const getUserProfileSchema = z.object({
+  accessToken: z.string(),
+}); 
+
+const getUserProfileRespSchema = z.object({
+  id: z.number(),
+  userName: z.string(),
+  email: z.string(),
+  phoneNumber: z.string(),
+  bio: z.string().nullable(),
+  image: z.string().nullable(),
+});
+
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 
 export type LoginUserInput = z.infer<typeof loginUserSchema>;
@@ -54,4 +67,6 @@ export const { schemas: userSchemas, $ref } = buildJsonSchemas({
   loginUserSchema,
   createUserRespSchema,
   loginRespSchema,
+  getUserProfileSchema,
+  getUserProfileRespSchema,
 });

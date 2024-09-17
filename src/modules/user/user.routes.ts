@@ -20,6 +20,14 @@ async function userRoutes(server: FastifyInstance){
             }
         }
     }, signupHandler);
+    server.get("/profile",{
+        schema: {
+            body: $ref("getUserProfileSchema"), 
+            response: {
+                200: $ref("getUserProfileRespSchema")
+            }
+        }
+    }, getUsersHandler);
     server.get("/users", getUsersHandler);
 }
 

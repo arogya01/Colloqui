@@ -37,6 +37,23 @@ export const createUser = async (requestBody: CreateUserInput) => {
 
 export const verifyPassword = async () => {};
 
+export const fetchUserByUserId = async (userId:number) => {
+  console.log('fetching user by id', userId);
+  const userProfile = await prisma.profile.findUnique({
+   where: {
+    userId : userId
+   }, 
+   include:{
+    user:true
+   }
+  }); 
+
+  console.log('userProifle,', userProfile); 
+
+  return userProfile; 
+
+}
+
 export const checkExistingUser = async (email: string) => {
   console.log("check for existing user");
 
