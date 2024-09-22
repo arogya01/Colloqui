@@ -21,8 +21,7 @@ async function userRoutes(server: FastifyInstance){
         }
     }, signupHandler);
     server.get("/profile",{
-        schema: {
-            body: $ref("getUserProfileSchema"), 
+        schema: {            
             response: {
                 200: $ref("getUserProfileRespSchema")
             }

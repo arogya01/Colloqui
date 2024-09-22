@@ -46,7 +46,12 @@ const createUserRespSchema = z.object({
 });
 
 const getUserProfileSchema = z.object({
-  accessToken: z.string(),
+  querystring: z.object({
+    accessToken: z.string({
+      required_error: "AccessToken is required",
+      invalid_type_error: "AccessToken must be a string",
+    }),
+  }),
 }); 
 
 const getUserProfileRespSchema = z.object({
