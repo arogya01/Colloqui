@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { CreateUserInput, LoginUserInput } from "./user.schema";
-import { checkExistingUser, createUser } from "./user.service";
+import { checkExistingUser, createUser, fetchUserByUserId } from "./user.service";
 import { verifyPassword } from "../../utils/hash";
 
 export const loginHandler = async (
@@ -60,4 +60,66 @@ export async function signupHandler(
 
 export const getUsersHandler = () => {
   console.log("loginHandler");
+};
+
+
+
+
+interface DecodedToken {
+  userId: string;
+  [key: string]: any;
+}
+
+export const getUserProfileHandler = async (
+  request: FastifyRequest<{
+    Querystring: {
+      accessToken: string;
+    };
+  }>,
+  reply: FastifyReply
+) => {
+  console.log("getUserProfileHandler");
+
+  try {
+    // Get the token from the Authorization header
+    const authHeader = request.headers.authorization;
+    if (!authHeader) {
+      reply.code(401).send({ error: 'No authorization header provided' });
+      return;
+    }
+
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      reply.code(401).send({ error: 'No token provided' });
+      return;
+    }
+
+    // Decode the token
+    const decodedToken = request.jwt.decode(token) as DecodedToken;
+    console.log('decoded', decodedToken);
+
+    if (!decodedToken) {
+      reply.code(401).send({ error: 'Invalid token' });
+      return;
+    }
+
+    const userId = decodedToken.userId;
+    if (!userId) {
+      reply.code(401).send({ error: 'UserId not found in token' });
+      return;
+    }
+
+    // Find the user in the database
+    const user = await fetchUserByUserId(Number(userId));
+    if (!user) {
+      reply.code(404).send({ error: 'User not found' });
+      return;
+    }
+
+    // Return the user profile
+    reply.send(user);
+  } catch (error) {
+    console.error('Error in getUserProfileHandler:', error);
+    reply.code(500).send({ error: 'Internal server error' });
+  }
 };
