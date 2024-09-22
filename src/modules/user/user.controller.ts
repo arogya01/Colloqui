@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { CreateUserInput, LoginUserInput } from "./user.schema";
-import { checkExistingUser, createUser, fetchUserByUserId } from "./user.service";
+import { checkExistingUser, createUser, fetchUserByEmail } from "./user.service";
 import { verifyPassword } from "../../utils/hash";
 
 export const loginHandler = async (
@@ -65,17 +65,12 @@ export const getUsersHandler = () => {
 
 
 
-interface DecodedToken {
-  userId: string;
+interface DecodedToken {  
   [key: string]: any;
 }
 
 export const getUserProfileHandler = async (
-  request: FastifyRequest<{
-    Querystring: {
-      accessToken: string;
-    };
-  }>,
+  request: FastifyRequest,
   reply: FastifyReply
 ) => {
   console.log("getUserProfileHandler");
@@ -103,14 +98,15 @@ export const getUserProfileHandler = async (
       return;
     }
 
-    const userId = decodedToken.userId;
-    if (!userId) {
-      reply.code(401).send({ error: 'UserId not found in token' });
+    const email = decodedToken.email; 
+    if (!email) {
+      reply.code(401).send({ error: 'user details not found in token' });
       return;
     }
 
     // Find the user in the database
-    const user = await fetchUserByUserId(Number(userId));
+    const user = await fetchUserByEmail(email);
+    console.log('got the user',user);
     if (!user) {
       reply.code(404).send({ error: 'User not found' });
       return;

@@ -55,7 +55,7 @@ const getUserProfileSchema = z.object({
 }); 
 
 const getUserProfileRespSchema = z.object({
-  id: z.number(),
+  userId: z.number(),
   userName: z.string(),
   email: z.string(),
   phoneNumber: z.string(),

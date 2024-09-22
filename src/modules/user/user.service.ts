@@ -37,18 +37,15 @@ export const createUser = async (requestBody: CreateUserInput) => {
 
 export const verifyPassword = async () => {};
 
-export const fetchUserByUserId = async (userId:number) => {
-  console.log('fetching user by id', userId);
+export const fetchUserByEmail = async (email:string) => {
+  console.log('fetching user by id', email);
   const userProfile = await prisma.profile.findUnique({
    where: {
-    userId : userId
-   }, 
-   include:{
-    user:true
-   }
+    email:email
+   },    
   }); 
 
-  console.log('userProifle,', userProfile); 
+  console.log('userProfile,', userProfile); 
 
   return userProfile; 
 
