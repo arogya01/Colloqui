@@ -3,20 +3,34 @@ import prisma from "../../utils/prisma";
 
 export const fetchAllConversations = async (userId: number) => {
   try {
-    const convos = await prisma.conversation.findMany({
+    const conversations = await prisma.conversation.findMany({
       where: {
         participant: {
           some: {
             userId
           }
-        }
+        },
+      },
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: 1,
+          include: {
+            media: true,
+          }
+        },      
+      },
+      orderBy: {
+        updatedAt: 'desc',
       },
     });
 
-    console.log(convos);
-    return convos;
+    return conversations;
   } catch (error) {
-    console.error("error occured in fetching all conversations", error);
+    console.error("Error occurred in fetching all conversations", error);
+    throw error;
   }
 };
 
