@@ -52,9 +52,10 @@ export async function signupHandler(
   try {
     const user = await createUser(body);
     console.log("user", user);
-    return reply.code(200).send({ message: "user created successfully" });
+    return reply.code(201).send({ message: "user created successfully" });
   } catch (error) {
-    console.log("error occured in singup handler boy", error);
+    console.error("Error occurred in signup handler:", error);
+    return reply.code(500).send({ message: "Error creating user", error: error instanceof Error ? error.message : String(error) });
   }
 }
 
@@ -106,16 +107,18 @@ export const getUserProfileHandler = async (
 
     // Find the user in the database
     const user = await fetchUserByEmail(email);
-    console.log('got the user',user);
+    console.log('got the user', user);
     if (!user) {
-      reply.code(404).send({ error: 'User not found' });
-      return;
+      return reply.code(404).send({ error: 'User not found' });
     }
 
     // Return the user profile
-    reply.send(user);
+    return reply.send(user);
   } catch (error) {
     console.error('Error in getUserProfileHandler:', error);
-    reply.code(500).send({ error: 'Internal server error' });
+    return reply.code(500).send({ 
+      error: 'Internal server error', 
+      message: error instanceof Error ? error.message : String(error)
+    });
   }
 };

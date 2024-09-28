@@ -93,7 +93,8 @@ export async function chatRoutes(server: FastifyInstance) {
         }
 
         if (data?.type === CHAT_EVENTS.SEND_MESSAGE) {
-          const createdMessage = await createMessage(data.message);
+          const {conversationId, value, valueType, senderId} = data;
+          const createdMessage = await createMessage({conversationId, value, valueType, senderId});
           connection.socket.send(
             JSON.stringify({
               type: CHAT_EVENTS.MESSAGE_SENT,

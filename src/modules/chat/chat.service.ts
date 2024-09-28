@@ -20,11 +20,12 @@ export const fetchAllConversations = async (userId: number) => {
   }
 };
 
-export const fetchAllMessages = async (conversationId: number) => {
+export const fetchAllMessages = async (conversationId: string) => {
+  const id = parseInt(conversationId);
   try {
     const messages = await prisma.message.findMany({
       where: {
-        conversationId,
+        conversationId: id,
       },
       include: {
         media: true,
