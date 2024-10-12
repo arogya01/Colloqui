@@ -18,16 +18,40 @@ export const fetchAllConversations = async (userId: number) => {
           },
           take: 1,
           include: {
-            media: true,
+            media: true,            
           }
-        },      
+        },  
+        participant: {
+          include: {
+            user : {
+              select: {
+                id:true, 
+                Profile: {
+                  select: {
+                    userName: true, 
+                    image: true, 
+                  }
+                }
+              }
+            }
+          }
+        }            
       },
       orderBy: {
         updatedAt: 'desc',
       },
     });
 
-    return conversations;
+    const transformedConversations = conversations.map((conversation) => ({
+      ...conversation, 
+      participants: conversation.participant.map(p => ({
+        id: p.user.id, 
+        userName: p.user.Profile?.userName, 
+        image: p.user.Profile?.image, 
+      }))
+    }));
+
+    return transformedConversations;
   } catch (error) {
     console.error("Error occurred in fetching all conversations", error);
     throw error;
