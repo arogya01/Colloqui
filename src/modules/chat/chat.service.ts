@@ -42,9 +42,9 @@ export const fetchAllConversations = async (userId: number) => {
       },
     });
 
-    const transformedConversations = conversations.map((conversation) => ({
+    const transformedConversations = conversations.map(({participant,...conversation}) => ({
       ...conversation, 
-      participants: conversation.participant.map(p => ({
+      participants: participant.map(p => ({
         id: p.user.id, 
         userName: p.user.Profile?.userName, 
         image: p.user.Profile?.image, 
